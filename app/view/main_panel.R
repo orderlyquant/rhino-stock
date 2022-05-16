@@ -2,18 +2,17 @@
 
 box::use(
   shiny[
+    column,
     fluidRow,
+    h3,
     mainPanel,
-    moduleServer, NS,
-    plotOutput, renderPlot,
-    renderText,
-    tags,
-    textOutput
+    moduleServer, NS
   ]
 )
 
 box::use(
-  app/view/price_summary
+  app/view/price_summary,
+  app/logic/calc_dr
 )
 
 #' @export
@@ -21,13 +20,21 @@ ui <- function(id) {
   ns <- NS(id)
   
   mainPanel(
-    price_summary$ui(ns("ytd"))
+    fluidRow(
+      column(6, fluidRow(h3("QTD"), price_summary$ui(ns("qtd")))),
+      column(6, fluidRow(h3("YTD"), price_summary$ui(ns("ytd"))))
+    ),
+    fluidRow(
+      column(6, fluidRow(h3("TTM"), price_summary$ui(ns("ttm"))))
+    )
   )
 }
 
 #' @export
-server <- function(id, tkr) {
+server <- function(id, tkr, show_returns) {
   moduleServer(id, function(input, output, session) {
-    price_summary$server("ytd", tkr)
+    price_summary$server("qtd", tkr, calc_dr$calc("qtd"), show_returns)
+    price_summary$server("ytd", tkr, calc_dr$calc("ytd"), show_returns)
+    price_summary$server("ttm", tkr, calc_dr$calc("ttm"), show_returns)
   })
 }

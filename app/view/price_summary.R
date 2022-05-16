@@ -2,13 +2,10 @@
 
 box::use(
   shiny[
-    fluidPage, fluidRow,
-    moduleServer,
-    NS,
+    fluidRow,
+    moduleServer, NS,
     plotOutput,
-    renderPlot, renderText,
-    tags,
-    textOutput
+    renderPlot
   ]
 )
 
@@ -19,25 +16,16 @@ box::use(
 #' @export
 ui <- function(id) {
   ns <- NS(id)
-  
-  fluidPage(
-    fluidRow(
-      tags$h3(
-        textOutput(ns("ticker"))
-      )
-    ),
-    fluidRow(
-      plotOutput(ns("price_chart"))
-    )
+  fluidRow(
+    plotOutput(ns("price_chart"))
   )
 }
 
 #' @export
-server <- function(id, tkr) {
+server <- function(id, tkr, dr, show_returns) {
   moduleServer(id, function(input, output, session) {
-    output$ticker <- renderText(tkr())
     output$price_chart <- renderPlot(
-      viz_price_chart$viz_price_chart(tkr(), from = "2021-12-31", to = "2022-05-13")
+      viz_price_chart$viz(tkr(), dr, show_returns())
     )
   })
 }

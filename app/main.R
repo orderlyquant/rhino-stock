@@ -5,11 +5,12 @@ box::use(
     actionButton,
     bindEvent,
     bootstrapPage,
+    checkboxInput,
     fluidRow,
     moduleServer, NS,
     reactive,
     sidebarLayout, sidebarPanel,
-    tags, textInput, textOutput,
+    textInput, textOutput,
     titlePanel
   ],
 )
@@ -38,6 +39,13 @@ ui <- function(id) {
             ns("update"),
             label = "Update"
           )
+        ),
+        fluidRow(
+          checkboxInput(
+            ns("returns"),
+            label = "Show returns",
+            value = FALSE
+          )
         )
       ),
       main_panel$ui(ns("main_panel"))
@@ -50,9 +58,11 @@ server <- function(id) {
   
   moduleServer(id, function(input, output, session) {
     
-    cur_ticker <- reactive({input$ticker}) |> bindEvent(input$update)
+    cur_ticker <- reactive({input$ticker}) |>
+      bindEvent(input$update)
+    show_returns <- reactive({input$returns})
     
-    main_panel$server("main_panel", cur_ticker)
+    main_panel$server("main_panel", cur_ticker, show_returns)
   
   })
 }

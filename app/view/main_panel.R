@@ -5,10 +5,15 @@ box::use(
     fluidRow,
     mainPanel,
     moduleServer, NS,
+    plotOutput, renderPlot,
     renderText,
     tags,
     textOutput
   ]
+)
+
+box::use(
+  app/view/price_summary
 )
 
 #' @export
@@ -16,15 +21,13 @@ ui <- function(id) {
   ns <- NS(id)
   
   mainPanel(
-    tags$h3(
-      textOutput(ns("message"))
-    )
+    price_summary$ui(ns("ytd"))
   )
 }
 
 #' @export
 server <- function(id, tkr) {
   moduleServer(id, function(input, output, session) {
-    output$message <- renderText(tkr())
+    price_summary$server("ytd", tkr)
   })
 }

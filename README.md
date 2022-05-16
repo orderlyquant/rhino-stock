@@ -1,2 +1,2 @@
 # rhino-stock
-understanding rhino via a practical example
+A first project to understand rhino via a practical example.

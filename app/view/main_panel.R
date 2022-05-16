@@ -23,8 +23,8 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id) {
+server <- function(id, tkr) {
   moduleServer(id, function(input, output, session) {
-    output$message <- renderText("Hello!")
+    output$message <- renderText(tkr())
   })
 }

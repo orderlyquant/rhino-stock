@@ -3,10 +3,11 @@
 box::use(
   shiny[
     actionButton,
+    bindEvent,
     bootstrapPage,
     fluidRow,
     moduleServer, NS,
-    observeEvent,
+    reactive,
     sidebarLayout, sidebarPanel,
     tags, textInput, textOutput,
     titlePanel
@@ -14,7 +15,6 @@ box::use(
 )
 
 box::use(
-  app/view/sidebar,
   app/view/main_panel
 )
 
@@ -49,13 +49,10 @@ ui <- function(id) {
 server <- function(id) {
   
   moduleServer(id, function(input, output, session) {
-  
-    cur_ticker <- observeEvent(
-      input$update,
-      input$ticker
-    )  
     
-    main_panel$server("main_panel")
+    cur_ticker <- reactive({input$ticker}) |> bindEvent(input$update)
+    
+    main_panel$server("main_panel", cur_ticker)
   
   })
 }

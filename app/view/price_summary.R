@@ -2,15 +2,12 @@
 
 box::use(
   shiny[
-    fluidRow,
-    moduleServer, NS,
-    plotOutput,
-    renderPlot
+    fluidRow, moduleServer, NS, plotOutput, renderPlot
   ]
 )
 
 box::use(
-  app/logic/viz_price_chart
+  app/logic/viz_price_chart[viz_price_chart]
 )
 
 #' @export
@@ -25,7 +22,7 @@ ui <- function(id) {
 server <- function(id, tkr, dr, show_returns) {
   moduleServer(id, function(input, output, session) {
     output$price_chart <- renderPlot(
-      viz_price_chart$viz(tkr(), dr, show_returns())
+      viz_price_chart(tkr(), dr, show_returns())
     )
   })
 }

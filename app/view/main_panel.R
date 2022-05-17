@@ -2,17 +2,13 @@
 
 box::use(
   shiny[
-    column,
-    fluidRow,
-    h3,
-    mainPanel,
-    moduleServer, NS
+    column, fluidRow, h3, mainPanel, moduleServer, NS
   ]
 )
 
 box::use(
   app/view/price_summary,
-  app/logic/calc_dr
+  app/logic/calc_dr[calc_dr]
 )
 
 #' @export
@@ -21,11 +17,12 @@ ui <- function(id) {
   
   mainPanel(
     fluidRow(
-      column(6, fluidRow(h3("QTD"), price_summary$ui(ns("qtd")))),
-      column(6, fluidRow(h3("YTD"), price_summary$ui(ns("ytd"))))
+      column(5, fluidRow(h3("QTD"), price_summary$ui(ns("qtd")))),
+      column(1),
+      column(5, fluidRow(h3("YTD"), price_summary$ui(ns("ytd"))))
     ),
     fluidRow(
-      column(6, fluidRow(h3("TTM"), price_summary$ui(ns("ttm"))))
+      column(5, fluidRow(h3("TTM"), price_summary$ui(ns("ttm"))))
     )
   )
 }
@@ -33,8 +30,8 @@ ui <- function(id) {
 #' @export
 server <- function(id, tkr, show_returns) {
   moduleServer(id, function(input, output, session) {
-    price_summary$server("qtd", tkr, calc_dr$calc("qtd"), show_returns)
-    price_summary$server("ytd", tkr, calc_dr$calc("ytd"), show_returns)
-    price_summary$server("ttm", tkr, calc_dr$calc("ttm"), show_returns)
+    price_summary$server("qtd", tkr, calc_dr("qtd"), show_returns)
+    price_summary$server("ytd", tkr, calc_dr("ytd"), show_returns)
+    price_summary$server("ttm", tkr, calc_dr("ttm"), show_returns)
   })
 }

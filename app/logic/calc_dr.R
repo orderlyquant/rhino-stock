@@ -5,7 +5,7 @@ box::use(
   lubridate[floor_date, years]
 )
 
-calc <- function(pd) {
+calc_dr <- function(pd) {
   yday <- Sys.Date() - 1
   case_when(
     pd == "qtd" ~ c(floor_date(yday, "quarter"), yday),

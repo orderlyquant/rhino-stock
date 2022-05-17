@@ -2,21 +2,16 @@
 
 box::use(
   shiny[
-    actionButton,
-    bindEvent,
-    bootstrapPage,
-    checkboxInput,
-    fluidRow,
-    moduleServer, NS,
-    reactive,
-    sidebarLayout, sidebarPanel,
-    textInput, textOutput,
+    actionButton, bindEvent, bootstrapPage, checkboxInput,
+    fluidRow, moduleServer, NS, reactive,
+    sidebarLayout, sidebarPanel, textInput, textOutput,
     titlePanel
   ],
 )
 
 box::use(
-  app/view/main_panel
+  app/view/main_panel,
+  app/logic/parse_ticker[parse_ticker]
 )
 
 #' @export
@@ -58,7 +53,7 @@ server <- function(id) {
   
   moduleServer(id, function(input, output, session) {
     
-    cur_ticker <- reactive({input$ticker}) |>
+    cur_ticker <- reactive(parse_ticker({input$ticker})) |>
       bindEvent(input$update)
     show_returns <- reactive({input$returns})
     

@@ -2,7 +2,7 @@
 
 box::use(
   shiny[
-    fluidRow, moduleServer, NS, plotOutput, renderPlot
+    moduleServer, NS, plotOutput, renderPlot
   ]
 )
 
@@ -13,9 +13,9 @@ box::use(
 #' @export
 ui <- function(id) {
   ns <- NS(id)
-  fluidRow(
-    plotOutput(ns("price_chart"))
-  )
+  
+  plotOutput(ns("price_chart"))
+  
 }
 
 #' @export

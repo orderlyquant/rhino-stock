@@ -14,6 +14,8 @@ box::use(
   app/logic/parse_ticker[parse_ticker]
 )
 
+exp_tbl <- readRDS("./app/static/sample_security_exposures.rds")
+
 #' @export
 ui <- function(id) {
   ns <- NS(id)
@@ -57,7 +59,7 @@ server <- function(id) {
       bindEvent(input$update)
     show_returns <- reactive({input$returns})
     
-    main_panel$server("main_panel", cur_ticker, show_returns)
+    main_panel$server("main_panel", cur_ticker, show_returns, exp_tbl)
   
   })
 }

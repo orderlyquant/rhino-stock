@@ -1,11 +1,14 @@
 # app/main.R
 
 box::use(
+  dplyr[count, filter, mutate, pull],
   shiny[
-    actionButton, bindEvent, bootstrapPage, checkboxInput,
-    fluidRow, moduleServer, NS, reactive,
-    sidebarLayout, sidebarPanel, textInput, textOutput,
-    titlePanel
+    actionButton, bindEvent, checkboxInput,
+    fluidPage, fluidRow, HTML,
+    moduleServer, navbarPage,NS, reactive,
+    renderUI, req,
+    sidebarLayout, sidebarPanel, textInput,
+    titlePanel, uiOutput, wellPanel
   ],
 )
 
@@ -19,7 +22,8 @@ exp_tbl <- readRDS("./app/static/sample_security_exposures.rds")
 #' @export
 ui <- function(id) {
   ns <- NS(id)
-  bootstrapPage(
+  fluidPage(
+    
     titlePanel("rhino - stock"),
     
     sidebarLayout(
@@ -43,7 +47,11 @@ ui <- function(id) {
             label = "Show returns",
             value = FALSE
           )
-        )
+        ),
+        fluidRow(
+          uiOutput(ns("ticker_summary"))
+        ),
+        width = 3
       ),
       main_panel$ui(ns("main_panel"))
     )
@@ -61,5 +69,16 @@ server <- function(id) {
     
     main_panel$server("main_panel", cur_ticker, show_returns, exp_tbl)
   
+    output$ticker_summary <- renderUI({
+      req(length(cur_ticker() > 0))
+      exp_tbl |> 
+        filter(ticker %in% cur_ticker()) |> 
+        count(ticker, security) |> 
+        mutate(display = paste0(ticker, " - ", security)) |> 
+        pull(display) |> 
+        paste(collapse = "<br>") |> 
+        HTML()
+    })
+    
   })
 }

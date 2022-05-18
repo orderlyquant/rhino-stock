@@ -1,7 +1,7 @@
 # app/logic/viz_exposures
 
 box::use(
-  cowplot[theme_minimal_hgrid],
+  cowplot[theme_minimal_grid],
   dplyr[filter, select, mutate],
   forcats[fct_rev],
   ggplot2[...],
@@ -36,8 +36,11 @@ viz_exposures <- function(tkr, tbl) {
     facet_wrap(~ factor, ncol = 2) +
     labs(x = NULL, y = NULL, fill = NULL) +
     xlim(c(-max_abs_exp, max_abs_exp)) +
-    theme_minimal_hgrid() +
-    theme(legend.position = "bottom") +
+    theme_minimal_grid() +
+    theme(
+      panel.spacing = unit(1.5, "lines"),
+      legend.position = "bottom"
+    ) +
     scale_fill_oq()
   
 }

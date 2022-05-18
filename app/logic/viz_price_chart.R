@@ -43,7 +43,7 @@ one_stock_chart <- function(tbl, returns) {
         aes(x = date, y = return)
       ) +
       geom_hline(yintercept = 0) +
-      geom_line() +
+      geom_line(size = 1.2) +
       scale_y_continuous(labels = label_percent()) +
       labs(x = NULL, y = NULL)
     
@@ -53,7 +53,7 @@ one_stock_chart <- function(tbl, returns) {
       ggplot(
         aes(x = date, y = adjusted)
       ) +
-      geom_line() +
+      geom_line(size = 1.2) +
       labs(x = NULL, y = NULL)
     
   }
@@ -83,7 +83,7 @@ many_stock_chart <- function(tbl, returns) {
         aes(x = date, y = return)
       ) +
       geom_hline(yintercept = 0) +
-      geom_line(aes(color = symbol)) +
+      geom_line(aes(color = symbol), size = 1.2) +
       scale_y_continuous(labels = label_percent()) +
       labs(x = NULL, y = NULL, color = NULL)
     
@@ -93,7 +93,7 @@ many_stock_chart <- function(tbl, returns) {
       ggplot(
         aes(x = date, y = adjusted)
       ) +
-      geom_line(aes(color = symbol)) +
+      geom_line(aes(color = symbol), size = 1.2) +
       labs(x = NULL, y = NULL, color = NULL)
     
   }
@@ -101,6 +101,7 @@ many_stock_chart <- function(tbl, returns) {
   return(
     plot +
       theme_minimal_hgrid() +
+      guides(color = guide_legend(nrow = 1)) +
       theme(legend.position = "bottom") +
       scale_color_oq()
   )

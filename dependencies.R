@@ -1,5 +1,7 @@
 # This file allows packrat (used by rsconnect during deployment) to pick up dependencies.
+library(bslib)
 library(cowplot)
+library(dplyr)
 library(forcats)
 library(oqthemes)
 library(rhino)

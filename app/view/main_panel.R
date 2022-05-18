@@ -2,7 +2,8 @@
 
 box::use(
   shiny[
-    column, div, fluidRow, h3, mainPanel, moduleServer, NS
+    column, div, fluidRow, h3, mainPanel, moduleServer, NS,
+    tabsetPanel, tabPanel
   ]
 )
 
@@ -18,16 +19,18 @@ ui <- function(id) {
   
   mainPanel(
     fluidRow(
-      # column(5, fluidRow(h3("QTD"), price_summary$ui(ns("qtd")))),
-      # column(1),
-      # column(5, fluidRow(h3("YTD"), price_summary$ui(ns("ytd"))))
-      column(6, div(class = "component-box", h3("QTD"), price_summary$ui(ns("qtd")))),
-      column(6, div(class = "component-box", h3("YTD"), price_summary$ui(ns("ytd"))))
+      tabsetPanel(
+        id = ns("return-tabs"),
+        tabPanel("QTD", price_summary$ui(ns("qtd"))),
+        tabPanel("YTD", price_summary$ui(ns("ytd"))),
+        tabPanel("TTM", price_summary$ui(ns("ttm"))),
+      )
     ),
     fluidRow(
-      column(6, div(class = "component-box", h3("TTM"), price_summary$ui(ns("ttm")))),
-      column(6, div(class = "component-box", h3("Exposures"), exposures$ui(ns("current"))))
-    )
+      # column(6, div(class = "component-box", h3("Exposures"), exposures$ui(ns("current"))))
+      column(6, h3("Exposures"), exposures$ui(ns("current")))
+    ),
+    width = 8
   )
 }
 

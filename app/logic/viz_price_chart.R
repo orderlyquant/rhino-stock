@@ -2,7 +2,7 @@
 
 box::use(
   cowplot[theme_minimal_hgrid],
-  dplyr[group_by, mutate, ungroup],
+  dplyr[group_by, mutate, slice_tail, ungroup],
   ggplot2[...],
   oqthemes[scale_color_oq],
   scales[label_percent],
@@ -11,39 +11,64 @@ box::use(
   ]
 )
 
+box::use(
+  app/logic/calc_market_data[get_prices_and_returns]
+)
+
+# viz_price_chart <- function(tkr, dr, returns = TRUE) {
+#   
+#   prices_tbl <- tq_get(tkr, from = dr[1], to = dr[2])
+#   prices_tbl <- prices_tbl |> 
+#     mutate(symbol = factor(symbol, tkr))
+#   
+#   num_tkr <- prices_tbl$symbol |> unique() |> length()
+#   
+#   if (num_tkr == 1) {
+#     one_stock_chart(prices_tbl, returns)
+#   } else {
+#     
+#     # only show returns for multiple stocks
+#     many_stock_chart(prices_tbl, returns = TRUE)
+#   }
+# 
+# }
+
 viz_price_chart <- function(tkr, dr, returns = TRUE) {
-  
-  prices_tbl <- tq_get(tkr, from = dr[1], to = dr[2])
-  prices_tbl <- prices_tbl |> 
+
+  returns_tbl <- get_prices_and_returns(tkr, from = dr[1], to = dr[2])
+  returns_tbl <- returns_tbl |>
     mutate(symbol = factor(symbol, tkr))
-  
-  num_tkr <- prices_tbl$symbol |> unique() |> length()
-  
+
+  num_tkr <- returns_tbl$symbol |> unique() |> length()
+
   if (num_tkr == 1) {
-    one_stock_chart(prices_tbl, returns)
+    one_stock_chart(returns_tbl, returns)
   } else {
-    
+
     # only show returns for multiple stocks
-    many_stock_chart(prices_tbl, returns = TRUE)
+    many_stock_chart(returns_tbl, returns = TRUE)
   }
 
 }
 
 one_stock_chart <- function(tbl, returns) {
   
+  final_tbl <- tbl |> 
+    slice_tail(n = 1) |> 
+    mutate(
+      adjusted_label = round(adjusted, 2),
+      return_label = round(return * 100, 2)
+    )
+  
   if(returns) {
-    returns_tbl <- tbl |> 
-      mutate(
-        returns = PCT_CHANGE(adjusted, fill_na = 0),
-        return  = CUMULATIVE_SUM(returns)
-      )
-    
-    plot <- returns_tbl |> 
+  
+    plot <- tbl |> 
       ggplot(
         aes(x = date, y = return)
       ) +
       geom_hline(yintercept = 0) +
       geom_line(size = 1.2) +
+      geom_label(data = final_tbl, aes(label = return_label), hjust = "outward") +
       scale_y_continuous(labels = label_percent()) +
       labs(x = NULL, y = NULL)
     
@@ -54,6 +79,7 @@ one_stock_chart <- function(tbl, returns) {
         aes(x = date, y = adjusted)
       ) +
       geom_line(size = 1.2) +
+      geom_label(data = final_tbl, aes(label = adjusted_label), hjust = "outward") +
       labs(x = NULL, y = NULL)
     
   }
@@ -67,23 +93,24 @@ one_stock_chart <- function(tbl, returns) {
 
 many_stock_chart <- function(tbl, returns) {
   
-  symbol_order <- 
+  final_tbl <- tbl |> 
+    group_by(symbol) |> 
+    slice_tail(n = 1) |> 
+    mutate(
+      adjusted_label = round(adjusted, 2),
+      return_label = round(return * 100, 2)
+    ) |> 
+    ungroup()
   
   if(returns) {
-    returns_tbl <- tbl |> 
-      group_by(symbol) |> 
-      mutate(
-        returns = PCT_CHANGE(adjusted, fill_na = 0),
-        return  = CUMULATIVE_SUM(returns)
-      ) |> 
-      ungroup()
     
-    plot <- returns_tbl |> 
+    plot <- tbl |> 
       ggplot(
         aes(x = date, y = return)
       ) +
       geom_hline(yintercept = 0) +
       geom_line(aes(color = symbol), size = 1.2) +
+      geom_label(data = final_tbl, aes(label = return_label, color = symbol), hjust = "outward") +
       scale_y_continuous(labels = label_percent()) +
       labs(x = NULL, y = NULL, color = NULL)
     
@@ -94,6 +121,7 @@ many_stock_chart <- function(tbl, returns) {
         aes(x = date, y = adjusted)
       ) +
       geom_line(aes(color = symbol), size = 1.2) +
+      geom_label(data = final_tbl, aes(label = adjusted_label, color = symbol), hjust = "outward") +
       labs(x = NULL, y = NULL, color = NULL)
     
   }

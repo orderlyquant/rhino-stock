@@ -6,10 +6,13 @@ box::use(
 )
 
 calc_dr <- function(pd) {
-  yday <- Sys.Date() - 1
+  
+  # this date convention works with tq_get, which returns
+  # pricing up until the previous day
+  today <- Sys.Date()
   case_when(
-    pd == "qtd" ~ c(floor_date(yday, "quarter"), yday),
-    pd == "ytd" ~ c(floor_date(yday, "year"), yday),
-    pd == "ttm" ~ c(yday - years(1), yday)
+    pd == "qtd" ~ c(floor_date(today, "quarter") - 1, today),
+    pd == "ytd" ~ c(floor_date(today, "year") - 1, today),
+    pd == "ttm" ~ c(today - years(1), today)
   )
 }

@@ -5,30 +5,34 @@ box::use(
   dplyr[filter, select, mutate],
   forcats[fct_rev],
   ggplot2[...],
-  oqthemes[scale_fill_oq]
+  oqthemes[scale_fill_oq],
+  stringr[str_replace]
 )
 
 viz_exposures <- function(tkr, tbl) {
-  
+
   key_factors <- c(
     "Market Sensitivity", "Volatility",
     "Growth", "Profitability",
     "Earnings Yield", "Leverage"
   )
-  
-  key_exp_tbl <- tbl |> 
-    filter(ticker %in% tkr) |> 
-    filter(factor %in% key_factors) |> 
-    filter(model == "Axioma US Fundamental Equity Risk Model MH 4") |> 
-    select(ticker, factor, value) |> 
+
+  # Fix for BRK-B and BRK-A, others?
+  tkr <- str_replace(tkr, "-", ".")
+
+  key_exp_tbl <- tbl |>
+    filter(ticker %in% tkr) |>
+    filter(factor %in% key_factors) |>
+    filter(model == "Axioma US Fundamental Equity Risk Model MH 4") |>
+    select(ticker, factor, value) |>
     mutate(
       ticker = factor(ticker, rev(tkr)),
       factor = factor(factor, key_factors)
     )
-  
+
   max_abs_exp <- max(abs(key_exp_tbl$value))
-  
-  key_exp_tbl |> 
+
+  key_exp_tbl |>
     ggplot(
       aes(x = value, y = ticker, fill = fct_rev(ticker))
     ) +
@@ -42,5 +46,5 @@ viz_exposures <- function(tkr, tbl) {
       legend.position = "bottom"
     ) +
     scale_fill_oq()
-  
+
 }

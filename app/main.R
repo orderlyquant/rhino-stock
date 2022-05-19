@@ -5,7 +5,7 @@ box::use(
   shiny[
     actionButton, bindEvent, checkboxInput,
     fluidPage, fluidRow, HTML,
-    moduleServer, navbarPage,NS, reactive,
+    moduleServer, navbarPage, NS, reactive,
     renderUI, req,
     sidebarLayout, sidebarPanel, textInput,
     titlePanel, uiOutput, wellPanel
@@ -23,9 +23,9 @@ exp_tbl <- readRDS("./app/static/sample_security_exposures.rds")
 ui <- function(id) {
   ns <- NS(id)
   fluidPage(
-    
+
     titlePanel("rhino - stock"),
-    
+
     sidebarLayout(
       sidebarPanel = sidebarPanel(
         fluidRow(
@@ -60,25 +60,25 @@ ui <- function(id) {
 
 #' @export
 server <- function(id) {
-  
+
   moduleServer(id, function(input, output, session) {
-    
+
     cur_ticker <- reactive(parse_ticker({input$ticker})) |>
       bindEvent(input$update)
     show_returns <- reactive({input$returns})
-    
+
     main_panel$server("main_panel", cur_ticker, show_returns, exp_tbl)
-  
+
     output$ticker_summary <- renderUI({
       req(length(cur_ticker() > 0))
-      exp_tbl |> 
-        filter(ticker %in% cur_ticker()) |> 
-        count(ticker, security) |> 
-        mutate(display = paste0(ticker, " - ", security)) |> 
-        pull(display) |> 
-        paste(collapse = "<br>") |> 
+      exp_tbl |>
+        filter(ticker %in% cur_ticker()) |>
+        count(ticker, security) |>
+        mutate(display = paste0(ticker, " - ", security)) |>
+        pull(display) |>
+        paste(collapse = "<br>") |>
         HTML()
     })
-    
+
   })
 }

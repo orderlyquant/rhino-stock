@@ -13,9 +13,9 @@ box::use(
 #' @export
 ui <- function(id) {
   ns <- NS(id)
-  
+
   plotOutput(ns("price_chart"))
-  
+
 }
 
 #' @export

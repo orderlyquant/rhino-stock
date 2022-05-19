@@ -1,4 +1,4 @@
-# app/logic/calc_dr
+# file: app/logic/calc_dr
 
 box::use(
   dplyr[case_when],
@@ -6,7 +6,7 @@ box::use(
 )
 
 calc_dr <- function(pd) {
-  
+
   # this date convention works with tq_get, which returns
   # pricing up until the previous day
   today <- Sys.Date()

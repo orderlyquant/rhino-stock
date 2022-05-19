@@ -1,4 +1,4 @@
-# app/view/main_panel.R
+# file: app/view/main_panel.R
 
 box::use(
   shiny[
@@ -16,7 +16,7 @@ box::use(
 #' @export
 ui <- function(id) {
   ns <- NS(id)
-  
+
   mainPanel(
     fluidRow(
       tabsetPanel(
@@ -27,7 +27,6 @@ ui <- function(id) {
       )
     ),
     fluidRow(
-      # column(6, div(class = "component-box", h3("Exposures"), exposures$ui(ns("current"))))
       column(6, h3("Exposures"), exposures$ui(ns("current")))
     ),
     width = 8

@@ -15,6 +15,7 @@ box::use(
   app/logic/calc_market_data[get_prices_and_returns]
 )
 
+#' @export
 viz_price_chart <- function(tkr, dr, returns = TRUE) {
 
   returns_tbl <- get_prices_and_returns(tkr, from = dr[1], to = dr[2])

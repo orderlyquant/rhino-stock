@@ -5,6 +5,7 @@ box::use(
   lubridate[floor_date, years]
 )
 
+#' @export
 calc_dr <- function(pd) {
 
   # this date convention works with tq_get, which returns

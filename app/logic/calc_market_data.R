@@ -5,6 +5,7 @@ box::use(
   tidyquant[tq_get]
 )
 
+#' @export
 get_prices_and_returns <- function(tkr, from, to) {
 
   tbl <- tq_get(tkr, from = from, to = to)

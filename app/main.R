@@ -1,7 +1,7 @@
 # app/main.R
 
 box::use(
-  dplyr[count, filter, mutate, pull],
+  dplyr[arrange, count, filter, mutate, pull],
   shiny[
     actionButton, bindEvent, checkboxInput,
     fluidPage, fluidRow, HTML,
@@ -17,7 +17,10 @@ box::use(
   app/logic/parse_ticker[parse_ticker]
 )
 
+
 exp_tbl <- readRDS("./app/static/sample_security_exposures.rds")
+
+
 
 #' @export
 ui <- function(id) {
@@ -75,6 +78,8 @@ server <- function(id) {
         filter(ticker %in% cur_ticker()) |>
         count(ticker, security) |>
         mutate(display = paste0(ticker, " - ", security)) |>
+        mutate(ticker = factor(ticker, cur_ticker())) |> 
+        arrange(ticker) |> 
         pull(display) |>
         paste(collapse = "<br>") |>
         HTML()

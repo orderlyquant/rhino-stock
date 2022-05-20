@@ -9,6 +9,7 @@ box::use(
 
 box::use(
   app/logic/calc_dr[calc_dr],
+  app/view/characteristics,
   app/view/exposures,
   app/view/price_summary
 )
@@ -16,29 +17,35 @@ box::use(
 #' @export
 ui <- function(id) {
   ns <- NS(id)
-
+  
   mainPanel(
     fluidRow(
-      tabsetPanel(
-        id = ns("return-tabs"),
-        tabPanel("QTD", price_summary$ui(ns("qtd"))),
-        tabPanel("YTD", price_summary$ui(ns("ytd"))),
-        tabPanel("TTM", price_summary$ui(ns("ttm"))),
+      column(
+        12,
+        h3("Performance"),
+        tabsetPanel(
+          id = ns("return-tabs"),
+          tabPanel("QTD", price_summary$ui(ns("qtd"))),
+          tabPanel("YTD", price_summary$ui(ns("ytd"))),
+          tabPanel("TTM", price_summary$ui(ns("ttm"))),
+        )
       )
     ),
     fluidRow(
-      column(6, h3("Exposures"), exposures$ui(ns("current")))
+      column(6, h3("Exposures"), exposures$ui(ns("cur_exp"))),
+      column(6, h3("Key Fundamentals"), characteristics$ui(ns("cur_char")))
     ),
     width = 8
   )
 }
 
 #' @export
-server <- function(id, tkr, show_returns, exp_tbl) {
+server <- function(id, tkr, show_returns, exp_tbl, char_tbl) {
   moduleServer(id, function(input, output, session) {
     price_summary$server("qtd", tkr, calc_dr("qtd"), show_returns)
     price_summary$server("ytd", tkr, calc_dr("ytd"), show_returns)
     price_summary$server("ttm", tkr, calc_dr("ttm"), show_returns)
-    exposures$server("current", tkr, exp_tbl)
+    exposures$server("cur_exp", tkr, exp_tbl)
+    characteristics$server("cur_char", tkr, char_tbl)
   })
 }

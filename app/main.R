@@ -19,6 +19,25 @@ box::use(
 
 
 exp_tbl <- readRDS("./app/static/sample_security_exposures.rds")
+char_tbl <- readRDS("./app/static/2022-05-20 - characterstics.rds")
+
+# move to shiny logic later
+# "context" will change which RDS to read for risk summary
+# this will allow you to use:
+#
+# 1 Exposure             exposure_active         195
+# 2 Exposure             exposure_bench          195
+# 3 Exposure             exposure_port           195
+#
+# exposure_port, exposure_bench generically
+#
+# ideas:
+#  - make port and bench explicit in risk rds file names
+#  - have a variable that holds
+#    dir("app/static", pattern = ".rds") |> grep("risk", x = _, value = TRUE)
+#    and parses it for port and bench
+
+risk_tbl <- readRDS("./app/static/2022-05-20 - smid risk summary.rds")
 
 
 
@@ -70,7 +89,7 @@ server <- function(id) {
       bindEvent(input$update)
     show_returns <- reactive({input$returns})
 
-    main_panel$server("main_panel", cur_ticker, show_returns, exp_tbl)
+    main_panel$server("main_panel", cur_ticker, show_returns, exp_tbl, char_tbl)
 
     output$ticker_summary <- renderUI({
       req(length(cur_ticker() > 0))

@@ -3,7 +3,7 @@
 box::use(
   dplyr[all_of, arrange, filter, left_join, mutate, relocate, rename, select, tibble],
   gt[gt, fmt_missing, fmt_number, tab_header],
-  gtExtras,
+  gtExtras[gt_theme_nytimes],
   oqthemes[scale_fill_oq],
   stringr[str_replace],
   tidyr[pivot_longer, pivot_wider]
@@ -57,6 +57,6 @@ tbl_characteristics <- function(tkr, tbl) {
       decimals = 2
     ) |> 
     fmt_missing(columns = all_of(tkr)) |> 
-    gtExtras$gt_theme_espn()
+    gt_theme_nytimes()
   
 }

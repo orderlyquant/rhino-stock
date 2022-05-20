@@ -89,7 +89,7 @@ server <- function(id) {
       bindEvent(input$update)
     show_returns <- reactive({input$returns})
 
-    main_panel$server("main_panel", cur_ticker, show_returns, exp_tbl, char_tbl)
+    main_panel$server("main_panel", cur_ticker, show_returns, exp_tbl, char_tbl, risk_tbl)
 
     output$ticker_summary <- renderUI({
       req(length(cur_ticker() > 0))

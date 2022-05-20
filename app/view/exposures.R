@@ -19,12 +19,12 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, tkr, tbl) {
+server <- function(id, tkr, exp_tbl, risk_tbl) {
   moduleServer(id, function(input, output, session) {
 
     output$exposures_chart <- renderPlot({
       req(length(tkr() > 0))
-      viz_exposures(tkr(), tbl)
+      viz_exposures(tkr(), exp_tbl, risk_tbl)
     })
   })
 }

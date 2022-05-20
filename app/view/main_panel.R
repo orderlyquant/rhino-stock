@@ -40,12 +40,12 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, tkr, show_returns, exp_tbl, char_tbl) {
+server <- function(id, tkr, show_returns, exp_tbl, char_tbl, risk_tbl) {
   moduleServer(id, function(input, output, session) {
     price_summary$server("qtd", tkr, calc_dr("qtd"), show_returns)
     price_summary$server("ytd", tkr, calc_dr("ytd"), show_returns)
     price_summary$server("ttm", tkr, calc_dr("ttm"), show_returns)
-    exposures$server("cur_exp", tkr, exp_tbl)
+    exposures$server("cur_exp", tkr, exp_tbl, risk_tbl)
     characteristics$server("cur_char", tkr, char_tbl)
   })
 }

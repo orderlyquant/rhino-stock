@@ -2,7 +2,7 @@
 
 box::use(
   shiny[
-    column, div, fluidRow, h3, mainPanel, moduleServer, NS,
+    column, div, fluidRow, h4, mainPanel, moduleServer, NS,
     tabsetPanel, tabPanel
   ]
 )
@@ -19,24 +19,39 @@ ui <- function(id) {
   ns <- NS(id)
   
   mainPanel(
-    fluidRow(
-      column(
-        12,
-        h3("Performance"),
-        tabsetPanel(
-          id = ns("return-tabs"),
-          tabPanel("QTD", price_summary$ui(ns("qtd"))),
-          tabPanel("YTD", price_summary$ui(ns("ytd"))),
-          tabPanel("TTM", price_summary$ui(ns("ttm"))),
-        )
+    tabsetPanel(
+      id = ns("main_tabs"),
+      tabPanel(
+        "Overview",
+        div(
+          h4("Performance"),
+          div(
+            class = "components-container-1w",
+            div(
+              class = "component-box",
+              tabsetPanel(
+                id = ns("return_tabs"),
+                tabPanel("QTD", price_summary$ui(ns("qtd"))),
+                tabPanel("YTD", price_summary$ui(ns("ytd"))),
+                tabPanel("TTM", price_summary$ui(ns("ttm"))),
+              )
+            )
+          )
+        ),
+        fluidRow(
+          div(
+            class = "components-container-2w",
+            exposures$ui(ns("cur_exp")),
+            characteristics$ui(ns("cur_char"))
+          )
+        ),
+        width = 8),
+      tabPanel(
+        "Risk"
       )
-    ),
-    fluidRow(
-      column(6, h3("Exposures"), exposures$ui(ns("cur_exp"))),
-      column(6, h3("Key Fundamentals"), characteristics$ui(ns("cur_char")))
-    ),
-    width = 8
+    )
   )
+  
 }
 
 #' @export

@@ -2,7 +2,7 @@
 
 box::use(
   shiny[
-    moduleServer, NS, uiOutput, renderUI, req
+    div, h4, moduleServer, NS, uiOutput, renderUI, req, tagList
   ]
 )
 
@@ -14,7 +14,15 @@ box::use(
 ui <- function(id) {
   ns <- NS(id)
   
-  uiOutput(ns("characteristics_table"))
+  tagList(
+    div(
+      h4(class = "component-title", "Characteristics"),
+      div(
+        class = "component-box",
+        uiOutput(ns("characteristics_table"))
+      )
+    )
+  )
   
 }
 

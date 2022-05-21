@@ -50,16 +50,18 @@ viz_exposures <- function(tkr, exp_tbl, risk_tbl) {
     ggplot(
       aes(x = value, y = ticker, fill = fct_rev(ticker))
     ) +
+    geom_col(show.legend = FALSE) +
     geom_vline(
       data = key_acct_exp_tbl,
-      aes(xintercept = exposure_port)
+      aes(xintercept = exposure_port),
+      alpha = 0.75
     ) +
     geom_vline(
       data = key_acct_exp_tbl,
       aes(xintercept = exposure_bench),
-      linetype = 2
+      linetype = 2,
+      alpha = 0.75
     ) +
-    geom_col(show.legend = FALSE) +
     facet_wrap(~ factor, ncol = 2) +
     scale_x_continuous(
       breaks = seq(-3, 3, 1),

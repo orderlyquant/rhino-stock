@@ -1,7 +1,7 @@
 # file: app/logic/calc_dr
 
 box::use(
-  dplyr[all_of, arrange, filter, left_join, mutate, relocate, rename, select, tibble],
+  dplyr[all_of, any_of, arrange, filter, left_join, mutate, relocate, rename, select, tibble],
   gt[gt, fmt_missing, fmt_number, tab_header],
   gtExtras[gt_theme_nytimes],
   oqthemes[scale_fill_oq],
@@ -48,15 +48,15 @@ tbl_characteristics <- function(tkr, tbl) {
     gt(rowname_col = "names") |> 
     # tab_header(title = "Key Fundamentals") |> 
     fmt_number(
-      columns = all_of(tkr),
+      columns = any_of(tkr),
       decimals = 1
     ) |> 
     fmt_number(
-      columns = all_of(tkr),
+      columns = any_of(tkr),
       rows = all_of(c("Beta")),
       decimals = 2
     ) |> 
-    fmt_missing(columns = all_of(tkr)) |> 
+    fmt_missing(columns = any_of(tkr)) |> 
     gt_theme_nytimes()
   
 }

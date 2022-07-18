@@ -4,6 +4,7 @@ box::use(
   cowplot[theme_minimal_hgrid],
   dplyr[group_by, mutate, slice_tail, ungroup],
   ggplot2[...],
+  grid[unit],
   oqthemes[scale_color_oq],
   scales[label_percent],
   tidyquant[
@@ -102,7 +103,10 @@ many_stock_chart <- function(tbl, returns) {
         aes(x = date, y = return)
       ) +
       geom_hline(yintercept = 0) +
-      geom_line(aes(color = symbol), size = 1.2) +
+      geom_line(
+        aes(color = symbol, linetype = symbol), size = 1.2,
+        key_glyph = "timeseries"
+      ) +
       geom_label(
         data = final_tbl,
         aes(label = return_label, color = symbol),
@@ -110,7 +114,7 @@ many_stock_chart <- function(tbl, returns) {
         show.legend = FALSE
       ) +
       scale_y_continuous(labels = label_percent()) +
-      labs(x = NULL, y = NULL, color = NULL)
+      labs(x = NULL, y = NULL, color = NULL, linetype = NULL)
 
   } else {
 
@@ -118,22 +122,29 @@ many_stock_chart <- function(tbl, returns) {
       ggplot(
         aes(x = date, y = adjusted)
       ) +
-      geom_line(aes(color = symbol), size = 1.2) +
+      geom_line(
+        aes(color = symbol), size = 1.2,
+        key_glyph = "timeseries"
+      ) +
       geom_label(
         data = final_tbl,
-        aes(label = adjusted_label, color = symbol),
+        aes(label = adjusted_label, color = symbol, linetype = symbol),
         hjust = "outward",
         show.legend = FALSE
       ) +
-      labs(x = NULL, y = NULL, color = NULL)
-
+      labs(x = NULL, y = NULL, color = NULL, linetype = NULL)
   }
 
   return(
     plot +
       theme_minimal_hgrid() +
       guides(color = guide_legend(nrow = 1)) +
-      theme(legend.position = "bottom") +
+      theme(
+        legend.position = "bottom",
+        legend.key.size = unit(2, "line"),
+        legend.key.width = unit(3, "line"),
+        legend.text = element_text(margin = margin(r = 1.5, unit = "line"))
+      ) +
       scale_color_oq()
   )
 

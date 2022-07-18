@@ -18,8 +18,9 @@ box::use(
 )
 
 
-exp_tbl <- readRDS("./app/static/sample_security_exposures.rds")
-char_tbl <- readRDS("./app/static/2022-05-20 - characterstics.rds")
+exp_tbl <- readRDS("./app/static/2022-07-15_security-exposures.rds")
+char_tbl <- readRDS("./app/static/2022-07-15_characteristics.rds")
+risk_tbl <- readRDS("./app/static/2022-07-15_smid-risk-summary.rds")
 
 # move to shiny logic later
 # "context" will change which RDS to read for risk summary
@@ -36,8 +37,6 @@ char_tbl <- readRDS("./app/static/2022-05-20 - characterstics.rds")
 #  - have a variable that holds
 #    dir("app/static", pattern = ".rds") |> grep("risk", x = _, value = TRUE)
 #    and parses it for port and bench
-
-risk_tbl <- readRDS("./app/static/2022-05-20 - smid risk summary.rds")
 
 
 
